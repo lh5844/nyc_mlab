@@ -1,6 +1,11 @@
 import subprocess
 import pandas as pd
 
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+
 # query string to get relevant data
 query = """
 SELECT 
@@ -34,3 +39,34 @@ with open(csv_file, "w") as f:
 # load csv to pandas for easy data parsing
 df = pd.read_csv(csv_file)
 
+# define features and target variable 
+X = df[['hour_of_day']]
+y = df['MeanThroughputMbps']
+
+# split into training and tests
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# initialize model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# predict mean throughput mbps
+y_pred = model.predict(X_test)
+
+# measure error 
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f"Mean Squared Error: {mse:.2f}")
+print(f"R^2 Score: {r2:.2f}")
+
+# plot regression for visual
+plt.scatter(X, y, alpha=0.5, label='Data points')
+plt.plot(X_test, y_pred, color='red', label='Regression line')
+plt.xlabel('Hour of Day')
+plt.ylabel('Mean Throughput (Mbps)')
+plt.title('Throughput vs Hour of Day in NYC (NDT tests)')
+plt.legend()
+plt.savefig("throughput_vs_hour_nyc.png", dpi=300, bbox_inches='tight')
