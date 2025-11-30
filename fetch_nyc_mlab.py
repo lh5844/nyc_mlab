@@ -16,7 +16,7 @@ WHERE
   AND client.Geo.city = "New York"
   AND IsValidBest = True
   AND a.MinRTT >= 0
-LIMIT 2000
+LIMIT 5000
 """
 
 # cmd line args for bq query cli
@@ -24,7 +24,7 @@ cmd = [
     "bq", "query",
     "--use_legacy_sql=false",
     "--format=csv",
-    "--max_rows=2000",
+    "--max_rows=5000",
     query
 ]
 

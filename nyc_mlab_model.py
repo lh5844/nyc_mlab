@@ -29,7 +29,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 model = RandomForestRegressor(
     n_estimators=200,      # number of trees
     max_depth=10,          # max depth of trees
-    min_samples_leaf=10,
+    min_samples_leaf=5,
     random_state=42,
 )
 
